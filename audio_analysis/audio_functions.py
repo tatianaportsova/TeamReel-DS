@@ -22,11 +22,16 @@ from gensim.parsing.preprocessing import STOPWORDS
 from gensim import corpora
 from gensim.models.ldamulticore import LdaMulticore
 
+
 # Import internal modules, packages, libraries for this project:
 from data_infra.data_pipelines import get_next_video
-
-
-video = get_next_video(video_s3_key='videos/ALPACAVID-i7swK-Wzc.webm')
+from google.oauth2 import service_account
+from google.auth import app_engine
+from google.cloud import storage
+from google.cloud import storage
+from oauth2client.client import GoogleCredentials
+ 
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="./apikey.json"
 
 """
 Load models
@@ -104,7 +109,7 @@ def process_file(file):
         #r.adjust_for_ambient_noise(source)  # adjust for noisy audio
         audio = r.record(source)    
         try:
-            a =  r.recognize_google_cloud(audio)        
+            a =  r.recognize_google(audio)   # recognize_google_cloud
         except sr.UnknownValueError:
             a = "Google Speech Recognition could not understand audio"
         except sr.RequestError as e:
