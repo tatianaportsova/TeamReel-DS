@@ -1,26 +1,33 @@
 # Import external modules, packages, libraries we will use:
-import moviepy.editor
-from pydub import AudioSegment
-from pydub.utils import make_chunks
-import numpy as np
-import pandas as pd
-import pickle
-import json
-import keras
-from keras.models import Model, model_from_json
-import json
-import os
-import wave
-import contextlib
-import speech_recognition as sr
-import re
-import librosa
-import shutil
-import gensim
 from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
 from gensim import corpora
+import shutil
 from gensim.models.ldamulticore import LdaMulticore
+import re 
+import speech_recognition as sr
+import subprocess
+import moviepy.editor
+from pydub import AudioSegment
+from pydub.utils import make_chunks
+import os
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import pickle
+import json
+import keras
+import wave
+import contextlib
+from keras.models import Model, model_from_json
+import tensorflow as tf
+from matplotlib.pyplot import specgram
+import glob 
+import sys
+import seaborn as sns
+import librosa
+import librosa.display
 
 
 # Import internal modules, packages, libraries for this project:
@@ -55,20 +62,90 @@ lb = pickle.load(infile)
 infile.close()
 
 
+
+'''  Functions for Sentiment Analysis  '''
+
+
 def get_audio_from_video(video_file=video):
     """
     Gets an audio file from user's video
     """
-    video_file = moviepy.editor.VideoFileClip(video)
-    audio = video_file.audio
+    video = moviepy.editor.VideoFileClip(video_file)
+    audio = video.audio
     audio.write_audiofile('audio.wav')
+    
+def get_sentiment_analysis():
+    """
+    A function to get sentiment/emotion analysis from the audio
+    """
+    get_audio_from_video()
+    audio = AudioSegment.from_file("audio.wav", "wav")
+    chunk_length_ms = 4000
+    chunks = make_chunks(audio, chunk_length_ms)
+    
+    #Export all of the individual chunks as wav files
+    path = "audio_sentiment/"
+    try:
+        os.mkdir(path)
+    except OSError:
+        print ("Creation of the directory %s failed" % path)
+    else:
+        print ("Successfully created the directory %s " % path)
+        
+    for i, chunk in enumerate(chunks):
+        chunk_name = "audio_sentiment/chunk{0}.wav".format(i)
+        chunk.export(chunk_name, format="wav")
+    
+    lists_of_files = os.listdir(path)
+    test_predictions = pd.DataFrame(columns=['predictions'])
+    
+    for filename in lists_of_files:
+        try:
+            data, sample_rate = librosa.load("audio_sentiment/{}".format(filename),
+                                             res_type='kaiser_fast',
+                                             sr=44100)
+            #print(filename)
+            sample_rate = np.array(sample_rate)
+            mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sample_rate, n_mfcc=13),axis=0)
+            newdf = pd.DataFrame(data=mfccs).T
+            
+            # Apply predictions
+            newdf= np.expand_dims(newdf, axis=2)
+            newpred = loaded_model.predict(newdf,batch_size=16,verbose=1)
+            
+            # Get the final predicted label
+            final = newpred.argmax(axis=1)
+            final = final.astype(int).flatten()
+            final = (lb.inverse_transform((final)))
+            #print(final)
+            test_predictions.loc[filename] = final
+        except:
+            pass
+        
+    labels = test_predictions.predictions.value_counts(normalize=True).keys().tolist()
+    
+    values= []
+    predictions = {} 
+    for i in test_predictions.predictions.value_counts(normalize=True).tolist():
+        values.append(round(i,2))   
+    for key in labels:
+        for value in values:
+            predictions[key] = value
+            values.remove(value) 
+            break
+            
+    return predictions
 
 
-def break_audio_file(file):
+
+'''   Functions for Speed of Speech   '''
+
+
+def break_audio_file(file_name = 'audio.wav'):
     """
     Breaks an audio file into smaller chunks
     """
-    myaudio = AudioSegment.from_file(file , "wav") 
+    myaudio = AudioSegment.from_file(file_name, "wav") 
     chunk_length_ms = 20000 # pydub calculates in millisec
     chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of 20 sec
 
@@ -85,8 +162,7 @@ def break_audio_file(file):
         chunk_name = "audio_chunks/chunk{0}.wav".format(i)
         chunk.export(chunk_name, format="wav")
 
-
-DIRNAME = r"audio_chunks/"
+dirname = r"audio_chunks/"
 def get_file_paths(dirname):
     """
     Gets file paths from the directory
@@ -97,7 +173,6 @@ def get_file_paths(dirname):
             filepath = os.path.join(root, filename)
             file_paths.append(filepath)  
     return file_paths 
-
 
 def process_file(file):
     """
@@ -116,8 +191,6 @@ def process_file(file):
             a = "Could not request results from Google Speech Recognition service; {0}".format(e)  
     return a
 
-
-data = []
 def get_text():
     # Create a new directory to store the chunks of txt
     path = 'text_chunks/'
@@ -128,7 +201,7 @@ def get_text():
     else:
         print ("Successfully created the directory %s " % path)
     
-    files = get_file_paths(DIRNAME)                             
+    files = get_file_paths(dirname)                             
     for file in files:                                           
         (filepath, ext) = os.path.splitext(file)                  
         file_name = os.path.splitext(os.path.basename(file))[0]
@@ -136,17 +209,14 @@ def get_text():
         if ext == '.wav':                                         
             a = process_file(file)
             with open("text_chunks/{}.txt".format(file_name), "w") as f:
-                f.write(a+". ")                            
-    return data
+                f.write(a+". ")   
 
-
-def get_transcripts_from_audio(audio_file='audio_file.wav'):
+def get_transcripts_from_audio(audio_file='audio.wav'):
     """
     A function to get a transcripts from the audio (stores text into separate chunks of text)
     """
-    break_audio_file(file)
+    break_audio_file()
     get_text()
-
 
 path = r"text_chunks/"
 def get_combined_text(path):
@@ -176,66 +246,7 @@ def gather_data(path_to_data):
     return data
 
 
-def get_sentiment_analysis():
-    """
-    A function to get sentiment/emotion analysis from the audio
-    """
-    get_audio_from_video()
-    audio = AudioSegment.from_file("audio.wav", "wav")
-    chunk_length_ms = 4000
-    chunks = make_chunks(audio, chunk_length_ms)
-    
-    #Export all of the individual chunks as wav files
-    path = "audio_sentiment/"
-    try:
-        os.mkdir(path)
-    except OSError:
-        print ("Creation of the directory %s failed" % path)
-    else:
-        print ("Successfully created the directory %s " % path)
-        
-    for i, chunk in enumerate(chunks):
-        chunk_name = "audio_sentiment/chunk{0}.wav".format(i)
-        chunk.export(chunk_name, format="wav")
-    
-    lists_of_files = os.listdir(path)
-    AS_predictions = pd.DataFrame(columns=['predictions'])
-    
-    for filename in lists_of_files:
-        try:
-            data, sample_rate = librosa.load("audio_sentiment/{}".format(filename),
-                                             res_type='kaiser_fast',
-                                             sr=44100)
-            sample_rate = np.array(sample_rate)
-            mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sample_rate, n_mfcc=13),axis=0)
-            newdf = pd.DataFrame(data=mfccs).T
-            
-            # Apply predictions
-            newdf= np.expand_dims(newdf, axis=2)
-            newpred = loaded_model.predict(newdf,batch_size=16,verbose=1)
-            
-            # Get the final predicted label
-            final = newpred.argmax(axis=1)
-            final = final.astype(int).flatten()
-            final = (lb.inverse_transform((final)))
-            AS_predictions.loc[filename] = final
-        except:
-            pass
-        
-    labels = AS_predictions.predictions.value_counts(normalize=True).keys().tolist()
-    values= []
-    for i in AS_predictions.predictions.value_counts(normalize=True).tolist():
-        values.append(round(i,2))   
-    predictions = {} 
-    for key in labels:
-        for value in values:
-            predictions[key] = value
-            values.remove(value) 
-            break
-            
-    return predictions
-
-
+'''  A function that removes directories and files after we are done with them  ''' 
 
 def remove_files():
     """
@@ -249,3 +260,16 @@ def remove_files():
             shutil.rmtree(i)
         except OSError as e:
             print("Error: %s : %s" % (i, e.strerror))
+
+
+'''  The main function to analyse the audio  '''
+
+def analyse_audio():
+    path = r"text_chunks/"
+    predictions = get_sentiment_analysis()
+    get_transcripts_from_audio(audio_file='audio.wav')
+    get_combined_text(path)
+    speed_of_speech = get_speed_of_speech()
+    return predictions, speed_of_speech  
+    # returns tuple
+    # e.g. ({'positive': 0.41, 'neutral': 0.31, 'negative': 0.27}, 140.3780151786146)
