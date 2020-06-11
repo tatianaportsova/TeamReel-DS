@@ -1,4 +1,5 @@
 # Import external modules, packages, libraries we will use:
+from textblob import TextBlob
 from gensim.utils import simple_preprocess
 from gensim.parsing.preprocessing import STOPWORDS
 from gensim import corpora
@@ -6,29 +7,23 @@ import shutil
 from gensim.models.ldamulticore import LdaMulticore
 import re 
 import speech_recognition as sr
-import subprocess
+import os
 import moviepy.editor
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 import os
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import cm
 import pickle
+import os
 import json
 import keras
 import wave
 import contextlib
 from keras.models import Model, model_from_json
 import tensorflow as tf
-from matplotlib.pyplot import specgram
 import glob 
-import sys
-import seaborn as sns
 import librosa
-import librosa.display
-
 
 # Import internal modules, packages, libraries for this project:
 from data_infra.data_pipelines import get_next_video
@@ -66,7 +61,7 @@ infile.close()
 '''  Functions for Sentiment Analysis  '''
 
 
-def get_audio_from_video(video_file=video):
+def get_audio_from_video(video_file):
     """
     Gets an audio file from user's video
     """
@@ -146,8 +141,8 @@ def break_audio_file(file_name = 'audio.wav'):
     Breaks an audio file into smaller chunks
     """
     myaudio = AudioSegment.from_file(file_name, "wav") 
-    chunk_length_ms = 20000 # pydub calculates in millisec
-    chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of 20 sec
+    chunk_length_ms = 30000 # pydub calculates in millisec
+    chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of 30 sec
 
     #Export all of the individual chunks as wav files
     path = "audio_chunks/"
@@ -162,7 +157,7 @@ def break_audio_file(file_name = 'audio.wav'):
         chunk_name = "audio_chunks/chunk{0}.wav".format(i)
         chunk.export(chunk_name, format="wav")
 
-dirname = r"audio_chunks/"
+dirname = "audio_chunks/"
 def get_file_paths(dirname):
     """
     Gets file paths from the directory
@@ -209,20 +204,15 @@ def get_text():
         if ext == '.wav':                                         
             a = process_file(file)
             with open("text_chunks/{}.txt".format(file_name), "w") as f:
-                f.write(a+". ")   
+                f.write(a+". ")  
 
+path = r"text_chunks/"
 def get_transcripts_from_audio(audio_file='audio.wav'):
     """
     A function to get a transcripts from the audio (stores text into separate chunks of text)
     """
     break_audio_file()
     get_text()
-
-path = r"text_chunks/"
-def get_combined_text(path):
-    """
-    Combines all of the separate chunks of text into one file
-    """
     files = get_file_paths(path)
     files.sort(key=lambda x: int(re.sub('\D', '', x)))
     #sorted(files, key=lambda x: int(re.sub('\D', '', x)))
@@ -245,6 +235,30 @@ def gather_data(path_to_data):
                     data.append(tokenize(str(text)))       
     return data
 
+def get_audio_duration(file_name = 'audio.wav'):
+    with contextlib.closing(wave.open(file_name,'r')) as f:
+        frames = f.getnframes()
+        rate = f.getframerate()
+        duration = (frames / float(rate)) / 60
+        return duration
+    
+def get_speed_of_speech():
+    tokens = gather_data('outputfile.txt')
+    count = 0
+    for i in tokens:
+        count += len(i)    
+    speed_of_speech = count / get_audio_duration(file_name = 'audio.wav')
+    return speed_of_speech
+
+
+'''  Function for Text (from Audio) Sentiment Analysis  '''
+
+def get_text_sentiment(file = 'outputfile.txt'):
+    with open(file, 'r') as f:
+        text = f.read()
+        sentiment = TextBlob(text).sentiment.polarity
+        return sentiment
+
 
 '''  A function that removes directories and files after we are done with them  ''' 
 
@@ -252,7 +266,7 @@ def remove_files():
     """
     Removes files and directories after they're no longer needed
     """
-    paths = ['audio_chunks/', 'text_chunks/']
+    paths = ['audio_chunks/', 'audio_sentiment/', 'text_chunks/']
     os.remove('outputfile.txt')
     
     for i in paths:
@@ -266,10 +280,11 @@ def remove_files():
 
 def analyse_audio():
     path = r"text_chunks/"
-    predictions = get_sentiment_analysis()
+    audio_sentiment = get_sentiment_analysis()
     get_transcripts_from_audio(audio_file='audio.wav')
-    get_combined_text(path)
     speed_of_speech = get_speed_of_speech()
-    return predictions, speed_of_speech  
+    text_sentiment = get_text_sentiment()
+    return audio_sentiment, text_sentiment, speed_of_speech
     # returns tuple
-    # e.g. ({'positive': 0.41, 'neutral': 0.31, 'negative': 0.27}, 140.3780151786146)
+    # e.g. ({'positive': 0.41, 'neutral': 0.31, 'negative': 0.27},
+    #        0.20464141414141415, 130.51674964953835)
