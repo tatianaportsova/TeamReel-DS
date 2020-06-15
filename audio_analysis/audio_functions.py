@@ -141,8 +141,8 @@ def break_audio_file(file_name = 'audio.wav'):
     Breaks an audio file into smaller chunks
     """
     myaudio = AudioSegment.from_file(file_name, "wav") 
-    chunk_length_ms = 30000 # pydub calculates in millisec
-    chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of 30 sec
+    chunk_length_ms = 20000 # pydub calculates in millisec
+    chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of 20 sec
 
     #Export all of the individual chunks as wav files
     path = "audio_chunks/"
@@ -179,7 +179,7 @@ def process_file(file):
         #r.adjust_for_ambient_noise(source)  # adjust for noisy audio
         audio = r.record(source)    
         try:
-            a =  r.recognize_google(audio)   # recognize_google_cloud
+            a =  r.recognize_google_cloud(audio)   # recognize_google
         except sr.UnknownValueError:
             a = "Google Speech Recognition could not understand audio"
         except sr.RequestError as e:
