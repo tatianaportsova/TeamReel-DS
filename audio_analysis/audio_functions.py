@@ -179,7 +179,7 @@ def process_file(file):
         #r.adjust_for_ambient_noise(source)  # adjust for noisy audio
         audio = r.record(source)    
         try:
-            a =  r.recognize_google(audio)   # recognize_google_cloud
+            a =  r.recognize_google_cloud(audio)   # recognize_google
         except sr.UnknownValueError:
             a = "Google Speech Recognition could not understand audio"
         except sr.RequestError as e:
