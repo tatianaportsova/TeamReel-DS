@@ -56,6 +56,7 @@ pg_cursor = pg_conn.cursor()
 # (1) video_analysis dict = info about that video from our DB (video_id, etc.)
 # (2) download .MP4 video file to project directory
 video_analysis = get_next_video()
+print(video_analysis)
 
 try:
     video_s3_key = video_analysis['video']['s3_key']
@@ -73,3 +74,6 @@ audio_filename = 'audio.wav'
 # Directory paths
 dirname = r"audio_chunks/"
 path = r"text_chunks/"
+
+# analyse_audio() function is the one function that does both: audio-sentiment analysis,
+# and gets number of words per minute
