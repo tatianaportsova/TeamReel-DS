@@ -1,39 +1,26 @@
 # Import external modules, packages, libraries we will use:
 from textblob import TextBlob
 from gensim.utils import simple_preprocess
-from gensim.parsing.preprocessing import STOPWORDS
-from gensim import corpora
 import shutil
-from gensim.models.ldamulticore import LdaMulticore
 import re 
 import speech_recognition as sr
 import os
 import moviepy.editor
 from pydub import AudioSegment
 from pydub.utils import make_chunks
-import os
 import numpy as np
 import pandas as pd
 import pickle
-import os
 import json
 import keras
 import wave
 import contextlib
 from keras.models import Model, model_from_json
 import tensorflow as tf
-import glob 
 import librosa
 
 # Import internal modules, packages, libraries for this project:
 from data_infra.data_pipelines import get_next_video
-from google.oauth2 import service_account
-from google.auth import app_engine
-from google.cloud import storage
-from google.cloud import storage
-from oauth2client.client import GoogleCredentials
- 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="./apikey.json"
 
 """
 Load models
@@ -179,7 +166,7 @@ def process_file(file):
         #r.adjust_for_ambient_noise(source)  # adjust for noisy audio
         audio = r.record(source)    
         try:
-            a =  r.recognize_google_cloud(audio)   # recognize_google
+            a =  r.recognize_google(audio)   # recognize_google_cloud for GC API
         except sr.UnknownValueError:
             a = "Google Speech Recognition could not understand audio"
         except sr.RequestError as e:
