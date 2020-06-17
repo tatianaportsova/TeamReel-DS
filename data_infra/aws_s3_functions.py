@@ -22,17 +22,24 @@ load_dotenv()
 
 AWS_ACCESS_KEY_ID =os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
+# os.environ['AWS_DEFAULT_REGION'] = AWS_DEFAULT_REGION
 
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 
 # Create an S3 Service Resource:
 s3 = boto3.resource('s3',
                     aws_access_key_id=AWS_ACCESS_KEY_ID,
-                    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+                    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                    region_name=AWS_DEFAULT_REGION
                    )
 
 # Make an S3 client with boto3:
-s3_client = boto3.client('s3')  # Automatically loads AWS keys from .env file
+s3_client = boto3.client('s3',
+                         aws_access_key_id=AWS_ACCESS_KEY_ID,
+                         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                         region_name=AWS_DEFAULT_REGION
+                         )
 
 
 # -------------------------------------------------------------------------
