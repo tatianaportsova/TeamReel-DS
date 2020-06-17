@@ -195,8 +195,10 @@ def analyze_new_video():
     # (2) download .MP4 video file to project directory
     video_info = get_next_video()
 
-    print(f"video_info returned: {video_info}")
-
+    # Exception handling: If get_next_video() returns "No messages in queue."
+    # to indicate there are no messages in the SQS queue (no new videos
+    # uploaded since last analysis), then stop and return
+    # "No new videos uploaded since last check."
     if video_info == "No messages in queue.":
         print(f"video_info is no messages check: {video_info}")
         return "No new videos uploaded since last check."
@@ -458,7 +460,7 @@ def analyze_new_video():
 
     # --------------------------------------------------------------------
     # RETURN:
-    
+
     # Return True if all of the above succeeded:
     print(f"\nSuccess: Analyzed video -> updated TeamReel DB with analysis.\n")
     return "True"
