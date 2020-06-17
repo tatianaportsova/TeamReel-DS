@@ -201,6 +201,7 @@ def analyze_new_video():
         video_s3_key = video_info['video']['s3_key']
     except KeyError:
         "KeyError: There is no information about this video in our database."
+        # print(f"""Current variables are: video_filename: {video_info['video']['s3_filename']}, video_id: {video_info['video']['video_id']}, video_s3_key: {video_info['video']['s3_key']}""")
 
     # Get audio from the video file:
     audio_filename = get_audio_from_video(video_filename=video_filename,
