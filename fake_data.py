@@ -17,8 +17,8 @@ FAKE_INPUT_VIDEO_ANALYSIS = {"video_id": 156}
 # FAKE OUTPUT DATA:
 
 FAKE_OUTPUT_USER_PERFORMANCE = {
-    "user_id": 227,
-    "video_id": 156,
+    "user_id": 201,
+    "video_id": 162,
     "prompt_id": 85,
     "scores": {
         "overall_performance_score": 4.3,
@@ -306,22 +306,22 @@ FAKE_OUTPUT_PROMPT_TOP_RESPONSES = {
     "prompt_id": 85,
     "video_responses_top_3": [
         {
-            "user_id": 227,
-            "video_id": 156,
+            "user_id": 201,
+            "video_id": 162,
             "video_s3_key": "videos/ALPACAVID-Q8H6aTJWG.mp4",
             "video_s3_filename": "ALPACAVID-Q8H6aTJWG.mp4",
             "score_overall_performance": 4.3
         },
         {
-            "user_id": 227,
-            "video_id": 156,
+            "user_id": 201,
+            "video_id": 162,
             "video_s3_key": "videos/ALPACAVID-Q8H6aTJWG.mp4",
             "video_s3_filename": "ALPACAVID-Q8H6aTJWG.mp4",
             "score_overall_performance": 4.3
         },
         {
-            "user_id": 227,
-            "video_id": 156,
+            "user_id": 201,
+            "video_id": 162,
             "video_s3_key": "videos/ALPACAVID-Q8H6aTJWG.mp4",
             "video_s3_filename": "ALPACAVID-Q8H6aTJWG.mp4",
             "score_overall_performance": 4.3
@@ -330,9 +330,9 @@ FAKE_OUTPUT_PROMPT_TOP_RESPONSES = {
 }
 
 FAKE_OUTPUT_VIDEO_ANALYSIS = {
-    "video_id": 156,
+    "video_id": 162,
     "prompt_id": 85,
-    "user_id": 227,
+    "user_id": 201,
     "scores": {
         "overall_performance_score": 4.3,
         "human_delivery_and_presentation": 3.4,
