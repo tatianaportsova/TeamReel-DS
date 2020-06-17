@@ -51,7 +51,7 @@ def get_feedback_for_user(user_id:int):
         raise ValueError('Invalid user_id')
 
     # Get all feedback for the given video from our PostgreSQL DB:
-    pg_cursor.execute(f"SELECT * FROM feedback WHERE owner_id={user_id};")
+    pg_cursor.execute(f"SELECT fb.id, fb.post, fb.video_id, fb.created_at, fb.updated_at, fb.overall_performance, fb.delivery_and_presentation, fb.response_quality, fb.audio_quality, fb.visual_environment FROM feedback as fb, videos as vds WHERE (fb.video_id = vds.id AND vds.owner_id={user_id});")
     column_names = [column_name[0] for column_name in pg_cursor.description]
 
     feedback_dataframe = pd.DataFrame(data=pg_cursor.fetchall(), columns=column_names)

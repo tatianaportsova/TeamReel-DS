@@ -134,4 +134,4 @@ def video_analyze():
 # -------------------------------------------------------------------
 # While debugging:
 if __name__ == "__main__":
-    application.run(debug=False, port=8080)
+    application.run(debug=False, port=5000, host='0.0.0.0')
