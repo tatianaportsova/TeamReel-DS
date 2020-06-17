@@ -20,19 +20,23 @@ load_dotenv()
 
 AWS_ACCESS_KEY_ID =os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
+# os.environ['AWS_DEFAULT_REGION'] = AWS_DEFAULT_REGION
 
 SQS_QUEUE_NAME = os.getenv("SQS_QUEUE_NAME")
 
 # Create an SQS Service Resource:
 sqs = boto3.resource('sqs',
                      aws_access_key_id=AWS_ACCESS_KEY_ID,
-                     aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+                     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                     region_name=AWS_DEFAULT_REGION
                     )
 
 # Create a client object for SQS, using the access keys in our .env file:
 sqs_client = boto3.client('sqs',
                           aws_access_key_id=AWS_ACCESS_KEY_ID,
-                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                          region_name=AWS_DEFAULT_REGION
                          )
 
 # Get our queue from SQS:
@@ -72,7 +76,7 @@ def sqs_delete_message_from_queue(receipt_handle:str):
     visibility timeout. So it is ideal to delete the message in the same run
     or same code cell during which you received the message).
     """
-    
+
     # Delete message received from SQS queue:
     sqs_client.delete_message(
         QueueUrl=queue.url,
