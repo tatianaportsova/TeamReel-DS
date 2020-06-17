@@ -195,13 +195,18 @@ def analyze_new_video():
     # (2) download .MP4 video file to project directory
     video_info = get_next_video()
 
+    print(f"video_info returned: {video_info}")
+
+    if video_info == "No messages in queue.":
+        print(f"video_info is no messages check: {video_info}")
+        return "No new videos uploaded since last check."
+
     try:
         video_filename = video_info['video']['s3_filename']
         video_id = video_info['video']['video_id']
         video_s3_key = video_info['video']['s3_key']
     except KeyError:
-        "KeyError: There is no information about this video in our database."
-        # print(f"""Current variables are: video_filename: {video_info['video']['s3_filename']}, video_id: {video_info['video']['video_id']}, video_s3_key: {video_info['video']['s3_key']}""")
+        print("KeyError: There is no information about this video in our database.")
 
     # Get audio from the video file:
     audio_filename = get_audio_from_video(video_filename=video_filename,
@@ -451,7 +456,11 @@ def analyze_new_video():
 
     remove_files(specified_files_list=[transcript_filename, audio_filename])
 
+    # --------------------------------------------------------------------
+    # RETURN:
+    
     # Return True if all of the above succeeded:
+    print(f"\nSuccess: Analyzed video -> updated TeamReel DB with analysis.\n")
     return "True"
 
 
