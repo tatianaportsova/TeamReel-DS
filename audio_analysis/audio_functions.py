@@ -41,8 +41,6 @@ if cwd == 'video-journal-for-teams-ds':
 elif cwd == 'audio_analysis':
     MODELS_PATH = '../models/'
 
-print(f"MODELS_PATH is: {MODELS_PATH}")  # [?? To do: REMOVE this ??]
-
 # loading json and model architecture
 json_file = open(MODELS_PATH + 'audio_analysis_model.json', 'r')
 loaded_model_json = json_file.read()
@@ -291,13 +289,9 @@ def remove_files(specified_files_list=[], specified_folders_list=[]):
         if file.startswith('ALPACAVID', 0) and (ext == '.mp4' or ext == '.webm'):
             files_to_remove.add(file)
 
-    print(f"files to remove: {files_to_remove}")
-    print(f"folders to remove: {folders_to_remove}")
-
     # Delete the files and folders:
     for file in files_to_remove:
         if file in os.listdir('.'):
-            print(f"file to remove: {file}")
             try:
                 os.remove(file)
             except OSError as e:
@@ -308,7 +302,6 @@ def remove_files(specified_files_list=[], specified_folders_list=[]):
             folder = folder[:-1]
         # Remove the folder and all files in it:
         if folder in os.listdir('.'):
-            print(f"folder to remove: {folder}")
             if folder[-1] != '/':
                 folder = folder + '/'
             try:

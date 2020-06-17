@@ -238,7 +238,6 @@ pg_cursor.execute(query)
 exists_in_vf_table = pg_cursor.fetchall()[0][0]
 
 if exists_in_vf_table:
-    print('yes, update it in videos_feedback table')  # [?? To do: REMOVE this ??]
     # Update record in videos_feedback table:
     pg_cursor.execute(
         """
@@ -274,7 +273,6 @@ if exists_in_vf_table:
         values_to_insert
     )
 else:
-    print('no, insert into videos_feedback table')  # [?? To do: REMOVE this ??]
     # Create record in videos_feedback table:
     pg_cursor.execute(
         """
@@ -311,16 +309,6 @@ else:
     )
 
 pg_conn.commit()
-
-
-# [?? To do: REMOVE this ??]
-print(f"video_info is: \n{video_info}")  # [?? To do: REMOVE this ??]
-print(f"audio_filename is: {audio_filename}")  # [?? To do: REMOVE this ??]
-print(f"transcript_filename is: {transcript_filename}")  # [?? To do: REMOVE this ??]
-print(f"audio_sentiment is: {audio_sentiment}")  # [?? To do: REMOVE this ??]
-print(f"text_sentiment is: {text_sentiment}")  # [?? To do: REMOVE this ??]
-print(f"speaking_speed is: {speaking_speed}\n")  # [?? To do: REMOVE this ??]
-print(f"other values in dict are: \n{values_to_insert}")
 
 
 # ----------------------------------------------------------------------------
