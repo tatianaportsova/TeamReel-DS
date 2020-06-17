@@ -200,7 +200,6 @@ def analyze_new_video():
     # uploaded since last analysis), then stop and return
     # "No new videos uploaded since last check."
     if video_info == "No messages in queue.":
-        print(f"video_info is no messages check: {video_info}")
         return "No new videos uploaded since last check."
 
     try:
