@@ -66,10 +66,6 @@ six==1.15.0
 smart-open==2.0.0
 soundfile==0.10.3.post1
 speechrecognition==3.8.1
-tensorboard-plugin-wit==1.6.0.post3
-tensorboard==2.2.2
-tensorflow-estimator==2.2.0
-tensorflow==2.2.0
 termcolor==1.1.0
 textblob==0.15.3
 threadpoolctl==2.1.0

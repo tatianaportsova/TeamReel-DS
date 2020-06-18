@@ -6,9 +6,9 @@ FROM python:3.7-slim
 COPY . /video-journal-for-teams-ds
 WORKDIR /video-journal-for-teams-ds
 
-RUN apt-get update && apt-get install -y libsndfile1
-RUN pip install -r requirements.txt --no-cache-dir
+RUN apt-get update && apt-get install -y libsndfile1 && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements_tensorflow.txt
 
 EXPOSE 5000
 
-CMD ["python", "main.py"]
+CMD ["python", "application.py"]
