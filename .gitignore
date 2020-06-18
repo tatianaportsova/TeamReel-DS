@@ -146,6 +146,9 @@ cython_debug/
 apikey.json
 GoogleAPI.json
 
+# Docker files:
+.dockerignore
+
 # AWS Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

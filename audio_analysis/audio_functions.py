@@ -51,7 +51,7 @@ loaded_model = model_from_json(loaded_model_json)
 loaded_model.load_weights(MODELS_PATH + 'audio_analysis_weights.h5')
 
 # compile loaded model
-opt = keras.optimizers.rmsprop(lr=0.00001, decay=1e-6)
+opt = tf.keras.optimizers.RMSprop(lr=0.00001, decay=1e-6)
 loaded_model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
 # load class labels

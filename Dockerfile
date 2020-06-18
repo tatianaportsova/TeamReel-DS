@@ -6,8 +6,9 @@ FROM python:3.7-slim
 COPY . /video-journal-for-teams-ds
 WORKDIR /video-journal-for-teams-ds
 
-RUN apt update && apt-get install libsndfile1 -y && pip install pipenv && pipenv install --deploy --system
+RUN apt-get update && apt-get install -y libsndfile1
+RUN pip install pipenv && pipenv install --deploy --system
 
 EXPOSE 5000
 
-CMD ["python", "application.py"]
+CMD ["python", "main.py"]
