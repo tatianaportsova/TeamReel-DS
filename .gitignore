@@ -155,3 +155,8 @@ GoogleAPI.json
 !.elasticbeanstalk/*.global.yml
 .ebextensions
 .ebextensions/*
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

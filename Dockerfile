@@ -7,7 +7,8 @@ COPY . /video-journal-for-teams-ds
 WORKDIR /video-journal-for-teams-ds
 
 RUN apt-get update && apt-get install -y libsndfile1
-RUN pip install pipenv && pipenv install --deploy --system
+RUN pip install pipenv==2018.11.26
+RUN pipenv install --deploy --system --verbose
 
 EXPOSE 5000
 
