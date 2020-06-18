@@ -1,13 +1,13 @@
 # Dockerfile to make a Docker image and container with the
-# TeamReel DS API (in main.py) and related packages.
+# TeamReel DS API (in application.py) and related packages.
 
 FROM python:3.7-slim
 
 COPY . /video-journal-for-teams-ds
 WORKDIR /video-journal-for-teams-ds
 
-RUN apt-get update && apt-get install -y libsndfile1 && pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir -r requirements_tensorflow.txt
+RUN apt-get update && apt-get install -y libsndfile1
+RUN pip install pipenv==2018.11.26 && pipenv install --deploy --system
 
 EXPOSE 5000
 
