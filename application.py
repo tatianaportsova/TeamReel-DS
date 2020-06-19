@@ -538,4 +538,5 @@ def get_video_analysis():
 
 # -------------------------------------------------------------------
 if __name__ == "__main__":
-    application.run(debug=False, port=5000, host='0.0.0.0')
+    # application.debug = True
+    application.run(port=5000, host='0.0.0.0')
