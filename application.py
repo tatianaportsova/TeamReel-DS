@@ -18,7 +18,7 @@ bucket -> S3 posts notification by adding message to our SQS queue
 function calls this API endpoint to trigger video analysis whenever
 there is any message (video waiting to be processed) in SQS).
 
-Returns string "True" if received.
+Returns true if received.
 
 For front-end (Web/iOS) to call for info (video analysis from TeamReel DB):
 
@@ -127,7 +127,7 @@ def root():
     function calls this API endpoint to trigger video analysis whenever
     there is any message (video waiting to be processed) in SQS).
 
-    Returns string "True" if received."""
+    Returns true if received."""
 
     header_2="""For Front-end (Web, iOS, Android) to Get Info (Analysis):"""
     endpoint_2="""/get_user_performance: Takes in a JSON with a TeamReel
@@ -165,7 +165,7 @@ def root():
 # function calls this API endpoint to trigger video analysis whenever
 # there is any message (video waiting to be processed) in SQS).
 #
-# Returns string "True" if received.
+# Returns true if received.
 @application.route("/analyze_new_video", methods=['POST'])
 def analyze_new_video():
     """
@@ -181,7 +181,7 @@ def analyze_new_video():
     function calls this API endpoint to trigger video analysis whenever
     there is any message (video waiting to be processed) in SQS).
 
-    Returns string "True" if received.
+    Returns true if received.
     """
 
     # Check to make sure we received a valid JSON with the request:
@@ -207,7 +207,9 @@ def analyze_new_video():
         video_id = video_info['video']['video_id']
         video_s3_key = video_info['video']['s3_key']
     except KeyError:
-        print("KeyError: There is no information about this video in our database.")
+        db_error = "KeyError: There is no information about this video in our database."
+        print(db_error)
+        return db_error
 
     # Get audio from the video file:
     audio_filename = get_audio_from_video(video_filename=video_filename,
@@ -460,9 +462,9 @@ def analyze_new_video():
     # --------------------------------------------------------------------
     # RETURN:
 
-    # Return True if all of the above succeeded:
+    # Return true if all of the above succeeded:
     print(f"\nSuccess: Analyzed video -> updated TeamReel DB with analysis.\n")
-    return "True"
+    return json.dumps(True)
 
 
 # ----------------------------------------------------------------------------
