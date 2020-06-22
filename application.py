@@ -230,7 +230,7 @@ def analyze_new_video():
     # visual_sentiment_results = [?? To add ??]
 
     # Values for our DB videos_feedback table:
-    sentiment_visual = np.random.uniform(0, 5)  # [?? To do: REMOVE this ??]
+    sentiment_visual = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
     sentiment_visual_details_fake = {
         "emotions": {
             "sad": 0.4816375482887931,
@@ -251,7 +251,7 @@ def analyze_new_video():
     text_sentiment = get_text_sentiment(file=transcript_filename)
 
     # Values for our DB videos_feedback table:
-    sentiment_audio = np.random.uniform(0, 5)  # [?? To do: REMOVE this ??]
+    sentiment_audio = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
     sentiment_audio_details = json.dumps(audio_sentiment)
 
 
@@ -262,7 +262,7 @@ def analyze_new_video():
                                           audio_filename=audio_filename)
 
     # Values for our DB videos_feedback table:
-    speaking_speed = np.random.uniform(0, 5)  # [?? To do: REMOVE this ??]
+    speaking_speed = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
 
 
     # --------------------------------------------------------------------
@@ -272,7 +272,7 @@ def analyze_new_video():
     # background_noise_score = [?? To add ??]
 
     # Values for our DB videos_feedback table:
-    background_noise = np.random.uniform(0, 5)  # [?? To do: REMOVE this ??]
+    background_noise = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
 
 
     # --------------------------------------------------------------------
@@ -283,7 +283,7 @@ def analyze_new_video():
     # appearance_facial_centering = [?? To add ??]
 
     # Values for our DB videos_feedback table:
-    appearance_facial_centering = np.random.uniform(0, 5)  # [?? To do: REMOVE this ??]
+    appearance_facial_centering = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
 
 
     # --------------------------------------------------------------------
@@ -316,7 +316,7 @@ def analyze_new_video():
     # Set values, with zeros representing "not set yet" in our TeamReel DB:
     # (i.e., "not set yet" items are what future Labs cohorts may want to implement)
     video_id = video_id
-    overall_performance = np.random.uniform(0, 5)  # [?? To do: REMOVE this ??]
+    overall_performance = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
     delivery_and_presentation = 0
     response_quality = human_response_quality
     audio_quality = 0
