@@ -166,7 +166,7 @@ def root():
 # there is any message (video waiting to be processed) in SQS).
 #
 # Returns true if received.
-@application.route("/analyze_new_video", methods=['POST'])
+@application.route("/analyze_new_video", methods=['GET'])
 def analyze_new_video():
     """
     '/analyze_new_video' endpoint: This endpoint gets the new video and
@@ -183,10 +183,6 @@ def analyze_new_video():
 
     Returns true if received.
     """
-
-    # Check to make sure we received a valid JSON with the request:
-    if not request.json:
-        return jsonify({"error": "no request received"})
 
     # GET BASE MATERIALS: VIDEO, AUDIO, TRANSCRIPT:
 
@@ -261,8 +257,22 @@ def analyze_new_video():
     speaking_speed = get_speed_of_speech(transcript_filename=transcript_filename,
                                           audio_filename=audio_filename)
 
-    # Values for our DB videos_feedback table:
-    speaking_speed = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
+    # Speaking speed summary stats:
+    ss_mean = 160
+    ss_std_dev = 30
+    ss_high_normal = ss_mean + ss_std_dev
+    ss_low_normal = ss_mean - ss_std_dev
+    ss_high_extreme = ss_mean + 2*ss_std_dev
+    ss_low_extreme = ss_mean - 2*ss_std_dev
+
+    # Score for our DB videos_feedback table:
+    # Translate to a score from 1-5:
+    if (speaking_speed > ss_low_normal) and (speaking_speed < ss_high_normal):
+      speaking_speed_score = 5
+    elif (speaking_speed > ss_low_extreme and speaking_speed <= ss_low_normal) or (speaking_speed >= ss_high_normal and speaking_speed < ss_high_extreme):
+      speaking_speed_score = 4
+    elif (speaking_speed <= ss_low_extreme) or (speaking_speed >= ss_high_extreme):
+      speaking_speed_score = 2
 
 
     # --------------------------------------------------------------------
@@ -316,20 +326,20 @@ def analyze_new_video():
     # Set values, with zeros representing "not set yet" in our TeamReel DB:
     # (i.e., "not set yet" items are what future Labs cohorts may want to implement)
     video_id = video_id
-    overall_performance = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
+    # overall_performance: Calculated below
     delivery_and_presentation = 0
     response_quality = human_response_quality
     audio_quality = 0
     visual_environment = 0
-    attitude = 0
+    attitude = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
     sentiment_visual = sentiment_visual
     sentiment_visual_details = sentiment_visual_details
     sentiment_audio = sentiment_audio
     sentiment_audio_details = sentiment_audio_details
     speaking_confidence = 0
     speaking_volume = 0
-    speaking_vocabulary = 0
-    speaking_speed = speaking_speed
+    speaking_vocabulary = np.random.uniform(3, 5)  # [?? To do: REMOVE this ??]
+    speaking_speed = speaking_speed_score
     speaking_filler_words = 0
     background_visual_environment = 0
     background_noise = background_noise
@@ -341,6 +351,36 @@ def analyze_new_video():
     human_response_quality = human_response_quality
     human_audio_quality = human_audio_quality
     human_visual_environment = human_visual_environment
+
+    # Overall performance score:
+    overall_performance_factors = np.array([human_overall_performance,
+                                            human_delivery_and_presentation,
+                                            human_response_quality,
+                                            human_audio_quality,
+                                            human_visual_environment,
+                                            attitude,
+                                            appearance_facial_centering,
+                                            speaking_speed,
+                                            speaking_vocabulary,
+                                            background_noise
+                                            ]
+                                           )
+
+    overall_performance_weights = np.array([0.30,
+                                            0.15,
+                                            0.15,
+                                            0.05,
+                                            0.05,
+                                            0.10,
+                                            0.05,
+                                            0.05,
+                                            0.05,
+                                            0.05
+                                            ]
+                                           )
+
+    overall_performance = np.dot(overall_performance_factors,
+                                 overall_performance_weights)
 
     # For our SQL queries below: Dictionary of values to insert into SQL queries:
     values_to_insert = {
