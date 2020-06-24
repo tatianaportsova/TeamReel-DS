@@ -207,6 +207,8 @@ def analyze_new_video():
         print(db_error)
         return db_error
 
+    print(f"video_id: {video_id} \nvideo_s3_key: {video_s3_key}")  # [?? To do: remove this! ??]
+
     # Get audio from the video file:
     audio_filename = get_audio_from_video(video_filename=video_filename,
                                           save_audio_as='audio.wav')
@@ -420,7 +422,11 @@ def analyze_new_video():
     pg_cursor.execute(query)
     exists_in_vf_table = pg_cursor.fetchall()[0][0]
 
+    print(f"exists_in_vf_table: {exists_in_vf_table}")
+    print(f"values_to_insert: \n{values_to_insert}")
+
     if exists_in_vf_table:
+        print(f"Yes, exists in vf table --> update values.")
         # Update record in videos_feedback table:
         pg_cursor.execute(
             """
@@ -456,11 +462,40 @@ def analyze_new_video():
             values_to_insert
         )
     else:
+        print(f"No, does NOT exist in vf table --> add values as new row.")
         # Create record in videos_feedback table:
         pg_cursor.execute(
             """
-            INSERT INTO videos_feedback(??)
-            VALUES (%(overall_performance)s,
+            INSERT INTO videos_feedback(
+                                        video_id,
+                                        overall_performance,
+                                        delivery_and_presentation,
+                                        response_quality,
+                                        audio_quality,
+                                        visual_environment,
+                                        attitude,
+                                        sentiment_visual,
+                                        sentiment_visual_details,
+                                        sentiment_audio,
+                                        sentiment_audio_details,
+                                        speaking_confidence,
+                                        speaking_volume,
+                                        speaking_vocabulary,
+                                        speaking_speed,
+                                        speaking_filler_words,
+                                        background_visual_environment,
+                                        background_noise,
+                                        appearance_facial_centering,
+                                        appearance_posture,
+                                        appearance_gesticulation,
+                                        human_overall_performance,
+                                        human_delivery_and_presentation,
+                                        human_response_quality,
+                                        human_audio_quality,
+                                        human_visual_environment
+                                        )
+            VALUES (%(video_id)s,
+                    %(overall_performance)s,
                     %(delivery_and_presentation)s,
                     %(response_quality)s,
                     %(audio_quality)s,
@@ -486,9 +521,8 @@ def analyze_new_video():
                     %(human_audio_quality)s,
                     %(human_visual_environment)s
                     )
-            WHERE video_id = %(video_id)s
             """,
-        values_to_insert
+            values_to_insert
         )
 
     pg_conn.commit()
