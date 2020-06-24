@@ -26,11 +26,14 @@ while True:
     # frame = cv2.resize(frame, (540, 380), fx = 0, fy = 0,
     #                      interpolation = cv2.INTER_CUBIC)
 
-    # Display the resulting frame
-    cv2.imshow('Frame', frame)
+    # # Display the resulting frame
+    # cv2.imshow('Frame', frame)
 
     # conversion of BGR to grayscale is necessary to apply this operation
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Display the resulting frame
+    cv2.imshow('Frame', gray)
 
     # define q as the exit button
     if cv2.waitKey(25) & 0xFF == ord('q'):
