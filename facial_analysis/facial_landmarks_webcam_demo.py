@@ -35,8 +35,8 @@ while True:
         # cv2.rectangle function (frame, (x1, y1), (x2, y2), (0, 255, 0), 3)
         cv2.rectangle(frame, (x1, y1), (w, h), (0, 255, 0), 3)
         cv2.rectangle(frame,
-                      (int(0.20*frame_width), int(0.20*frame_height)),
-                      (int(frame_width - 0.20*frame_width), int(frame_height - 0.20*frame_height)),
+                      (int(0.25*frame_width), int(0.15*frame_height)),
+                      (int(frame_width - 0.25*frame_width), int(frame_height - 0.15*frame_height)),
                       (0, 0, 255),
                       3)
 
