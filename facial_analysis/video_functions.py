@@ -1,5 +1,5 @@
 """
-[?? To do -- fill in ??]
+Module with functions for working with videos for the TeamReel product.
 """
 
 # ----------------------------------------------------------------------------
@@ -114,10 +114,6 @@ def play_video_file(video_filename:str):
     # Release the video capture object & close OpenCV windows:
     vid.release()
     cv2.destroyAllWindows()
-
-
-# ----------------------------------------------------------------------------
-
 
 
 # ----------------------------------------------------------------------------

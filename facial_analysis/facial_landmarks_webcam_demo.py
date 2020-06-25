@@ -1,24 +1,35 @@
 """
-[?? To add ??]
+Live demo version of TeamReel facial alignment feature, using input from
+webcam instead of video file, and displaying shapes (dots, rectangles) to
+show audience what we are identifying.
 """
 
-# We Import the necessary packages needed
+# Import libraries/modules/functions we will use:
 import cv2
 import numpy as np
 import dlib
 
-cap = cv2.VideoCapture(0)  # 'ALPACAVID-r7tjBJgdj.mp4'
-# We initialise detector of dlib
+# Open video capture object:
+cap = cv2.VideoCapture(0)
+
+if not cap.isOpened():
+    print("Error: Cannot open camera.")
+    exit()
+
+# Load pre-trained dlib facial landmarks detector from pre-trained model:
 detector = dlib.get_frontal_face_detector()
+
+# Initialize facial landmarks predictor using the above model:
 predictor = dlib.shape_predictor("./models/dlib_shape_predictor_68_face_landmarks.dat")
 
-# Get frames:
+# Get video frames:
 total_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 frame_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 frame_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 print(f"Frame width x height: {frame_width} x {frame_height}")
 
-# Start the main program
+# Analyze each frame in the video: get facial landmarks -> determine facial
+# alignment:
 while True:
     _, frame = cap.read()
 
@@ -47,6 +58,18 @@ while True:
             y = landmarks.part(n).y
             cv2.circle(frame, (x, y), 2, (255, 255, 0), -1)
     cv2.imshow("Frame", frame)
-    key = cv2.waitKey(1)
-    if key == 27:
-        break # press esc the frame is destroyed
+
+    # # Use 'esc' key to terminate:
+    # key = cv2.waitKey(1)
+    # if key == 27:
+    #     break # press esc the frame is destroyed
+
+    # Use the "q" key as the quit command:
+    # waitKey(0 or <= 0): waits for a key event infinitely
+    # waitKey(x:int): waits for a key event for x milliseconds (when x > 0)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the video capture object & close OpenCV windows:
+vid.release()
+cv2.destroyAllWindows()
