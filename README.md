@@ -15,7 +15,7 @@ We provided an API that returns the following to Web/front-end:
 ***Breakdown of the "overall perforance score":***
 
 - **Speaking Speed:**
-The speaking speed scores are created by transcribing the video and dividing by the length of the video.  The raw statistic is turned into a score based on researched (linked here) showing that a typical average speaking speed is around 150 words per minute.  
+The speaking speed scores are created by transcribing the video and dividing by the length of the video.  The raw statistic is turned into a score based on researched [linked here] (https://www.write-out-loud.com/speech-rate.html#:~:text=Conversational%20speech%20generally%20falls%20between,250%20to%20400%20wpm%20range) showing that a typical average speaking speed is around 150 words per minute.  
  ● 5 for speech with  between 135 and 165 words per minute
  ● 4 for speech with between 120 and 135 or 165 and 180 words per minute
  ● 3 for speech with between 100 and 135 or 180 and 195 words per minute
