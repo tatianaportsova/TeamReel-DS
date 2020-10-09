@@ -16,8 +16,8 @@ Here are the steps to use a Pre-trained model locally:
  5. pip3 install deepspeech==0.7.4
  6. curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.7.4/deepspeech-0.7.4-models.pbmm
  7. curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.7.4/deepspeech-0.7.4-models.scorer
- 8. ###place an audio file you want to transcribe into the DeepSpeeech folder
- 9. ###copy DeepSpeech_functions.py into the DeepSpeeech folder
+ 8. ###place an audio file you want to transcribe into the DeepSpeech folder
+ 9. ###copy DeepSpeech_functions.py into the DeepSpeech folder
  10. ###specify the audio file path in DeepSpeech_functions.py
  11. python DeepSpeech_functions.py
  
