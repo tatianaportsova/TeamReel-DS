@@ -1,5 +1,5 @@
 # TeamReel
-## TeamReel is a web app built on a Postgres database and a Node Express backend. The front-end is built on React & Redux. Websockets will be used for bi-directional real time updates.  Front End is  is deployed on amplify.   Backend is deployed on AWS.
+## TeamReel is a web app built on a Postgres database and a Node Express backend. The front-end is built on React & Redux. Websockets will be used for bi-directional real time updates.  Front End is deployed on amplify.   Backend is deployed on AWS.
 ## https://teamreel.org/
 ### The mission of the project is to become the best platform for teams to practice and get feedback for their on-screen talking skills asynchronously.
 
